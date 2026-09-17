@@ -1,0 +1,152 @@
+/**
+ * Tema de marca do ecossistema Lagoinha — Tailwind v4 (CSS-first, @theme).
+ * Fonte: identidade real de lagoinhaalphaville.com.br (preto + dourado).
+ *
+ * Uso: @import "@lagoinha/ui-kit/theme.css"; DEPOIS de @import "tailwindcss";
+ * no CSS de entrada do app. Alternância claro/escuro por classe .dark em
+ * <html> (mesmo mecanismo do certifica-web, ver @lagoinha/ui-kit "theme.ts") —
+ * apps que nunca adicionam essa classe simplesmente ficam sempre no claro.
+ *
+ * Nomes de variável seguem a convenção já validada em produção no
+ * certifica-web (canvas/surface/foreground/accent/...) — só as cores
+ * mudaram (azul -> dourado), não o vocabulário.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* -- só a barra/selo compartilhado usa isto, nunca muda com o tema -- */
+  --color-brand-black: #0B0A08;
+
+  --color-canvas: #FAF8F4;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F1EA;
+  --color-surface-hover: #F0EAE0;
+  --color-surface-sunken: #F5F1EA;
+  --color-border: #E6E1D8;
+  --color-border-subtle: #EFEBE3;
+  --color-foreground: #1C1917;
+  --color-foreground-secondary: #3A342C;
+  --color-muted-foreground: #6B6259;
+  --color-subtle-foreground: #948A7D;
+
+  --color-accent: #B9872E;
+  --color-accent-hover: #97701F;
+  --color-accent-foreground: #1A1305;
+  --color-accent-soft: #F5E4BC;
+  --color-accent-soft-foreground: #755717;
+
+  --color-bronze: #8C5A3E;
+  --color-bronze-soft: #F1E3D8;
+
+  --color-success: #ecfdf5;
+  --color-success-foreground: #047857;
+  --color-success-border: #d1fae5;
+  --color-success-solid: #059669;
+  --color-success-solid-hover: #047857;
+  --color-warning: #fffbeb;
+  --color-warning-foreground: #b45309;
+  --color-warning-border: #fef3c7;
+  --color-warning-solid: #d97706;
+  --color-warning-solid-hover: #b45309;
+  --color-danger: #fef2f2;
+  --color-danger-foreground: #dc2626;
+  --color-danger-border: #fee2e2;
+  --color-danger-solid: #dc2626;
+  --color-danger-solid-hover: #b91c1c;
+  --color-neutral-solid: #3A342C;
+  --color-neutral-solid-hover: #241F19;
+  --color-overlay: rgb(11 10 8 / 0.5);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-canvas: #121110;
+  --color-surface: #1B1917;
+  --color-surface-alt: #221E19;
+  --color-surface-hover: #2A251F;
+  --color-surface-sunken: #0D0C0B;
+  --color-border: #332E29;
+  --color-border-subtle: #241F1B;
+  --color-foreground: #F3EFE7;
+  --color-foreground-secondary: #D9D2C7;
+  --color-muted-foreground: #A69C8D;
+  --color-subtle-foreground: #7D7468;
+
+  --color-accent: #D6A44A;
+  --color-accent-hover: #E5BD6E;
+  --color-accent-foreground: #1A1305;
+  --color-accent-soft: rgb(214 164 74 / 0.15);
+  --color-accent-soft-foreground: #E5BD6E;
+
+  --color-bronze: #C4886A;
+  --color-bronze-soft: #2E211A;
+
+  --color-success: rgb(16 185 129 / 0.15);
+  --color-success-foreground: #34d399;
+  --color-success-border: rgb(16 185 129 / 0.35);
+  --color-success-solid: #10b981;
+  --color-success-solid-hover: #059669;
+  --color-warning: rgb(245 158 11 / 0.15);
+  --color-warning-foreground: #fbbf24;
+  --color-warning-border: rgb(245 158 11 / 0.35);
+  --color-warning-solid: #f59e0b;
+  --color-warning-solid-hover: #d97706;
+  --color-danger: rgb(239 68 68 / 0.15);
+  --color-danger-foreground: #f87171;
+  --color-danger-border: rgb(239 68 68 / 0.35);
+  --color-danger-solid: #ef4444;
+  --color-danger-solid-hover: #dc2626;
+  --color-neutral-solid: #4A443C;
+  --color-neutral-solid-hover: #5C554A;
+  --color-overlay: rgb(0 0 0 / 0.7);
+}
+
+@theme inline {
+  --color-brand-black: var(--color-brand-black);
+
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-surface-sunken: var(--color-surface-sunken);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-foreground: var(--color-foreground);
+  --color-foreground-secondary: var(--color-foreground-secondary);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-subtle-foreground: var(--color-subtle-foreground);
+
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-foreground: var(--color-accent-foreground);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-soft-foreground: var(--color-accent-soft-foreground);
+
+  --color-bronze: var(--color-bronze);
+  --color-bronze-soft: var(--color-bronze-soft);
+
+  --color-success: var(--color-success);
+  --color-success-foreground: var(--color-success-foreground);
+  --color-success-border: var(--color-success-border);
+  --color-success-solid: var(--color-success-solid);
+  --color-success-solid-hover: var(--color-success-solid-hover);
+  --color-warning: var(--color-warning);
+  --color-warning-foreground: var(--color-warning-foreground);
+  --color-warning-border: var(--color-warning-border);
+  --color-warning-solid: var(--color-warning-solid);
+  --color-warning-solid-hover: var(--color-warning-solid-hover);
+  --color-danger: var(--color-danger);
+  --color-danger-foreground: var(--color-danger-foreground);
+  --color-danger-border: var(--color-danger-border);
+  --color-danger-solid: var(--color-danger-solid);
+  --color-danger-solid-hover: var(--color-danger-solid-hover);
+  --color-neutral-solid: var(--color-neutral-solid);
+  --color-neutral-solid-hover: var(--color-neutral-solid-hover);
+  --color-overlay: var(--color-overlay);
+
+  --font-display: 'Big Shoulders Display', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}

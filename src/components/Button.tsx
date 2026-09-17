@@ -9,7 +9,7 @@ export function Button({ variant = 'primary', className = '', ...props }: Button
   const base = 'rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors';
   const styles =
     variant === 'primary'
-      ? 'bg-gold text-brandBlack hover:bg-gold-600'
-      : 'border border-line bg-transparent text-ink hover:bg-line/40';
+      ? 'bg-accent text-accent-foreground hover:bg-accent-hover'
+      : 'border border-border bg-transparent text-foreground hover:bg-surface-hover';
   return <button className={`${base} ${styles} ${className}`} {...props} />;
 }

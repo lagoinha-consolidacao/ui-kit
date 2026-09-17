@@ -16,7 +16,7 @@ interface AppShellProps {
     /** Conteúdo extra à direita, antes do switcher (ex.: nome do usuário, botão de sair). */
     actions?: ReactNode;
 }
-/** Barra superior compartilhada entre todos os apps do ecossistema Lagoinha. */
+/** Barra superior compartilhada entre todos os apps do ecossistema Lagoinha — sempre preta, independente do tema claro/escuro do conteúdo abaixo. */
 declare function AppShell({ appName, apps, logo, actions }: AppShellProps): react.JSX.Element;
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -32,4 +32,15 @@ interface BadgeProps {
 /** Selo de status (ex.: Confirmado/Pendente/Cancelado) — cor semântica, nunca o dourado de marca. */
 declare function Badge({ tone, children }: BadgeProps): react.JSX.Element;
 
-export { AppShell, type AppShellApp, type AppShellProps, Badge, type BadgeProps, Button, type ButtonProps };
+/**
+ * Gerenciador de modo claro/escuro (localStorage + prefers-color-scheme),
+ * compartilhado entre todos os apps — trazido do certifica-web, que foi o
+ * primeiro a construir isso, sem nada específico daquele app.
+ */
+type ThemeMode = 'light' | 'dark' | 'system';
+declare function getThemeMode(): ThemeMode;
+declare function getEffectiveTheme(): 'light' | 'dark';
+declare function setThemeMode(next: ThemeMode): void;
+declare function subscribeTheme(cb: () => void): () => boolean;
+
+export { AppShell, type AppShellApp, type AppShellProps, Badge, type BadgeProps, Button, type ButtonProps, type ThemeMode, getEffectiveTheme, getThemeMode, setThemeMode, subscribeTheme };

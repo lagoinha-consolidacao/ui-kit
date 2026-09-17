@@ -23,18 +23,18 @@ const defaultLogo = (
   </svg>
 );
 
-/** Barra superior compartilhada entre todos os apps do ecossistema Lagoinha. */
+/** Barra superior compartilhada entre todos os apps do ecossistema Lagoinha — sempre preta, independente do tema claro/escuro do conteúdo abaixo. */
 export function AppShell({ appName, apps, logo, actions }: AppShellProps) {
   return (
-    <div className="flex items-center gap-4 bg-brandBlack px-5 py-3">
-      <div className="flex items-center gap-2.5 font-display text-[15px] font-black uppercase tracking-wide text-paper">
-        <span className="flex h-6.5 w-6.5 items-center justify-center rounded-full border-2 border-gold text-gold">
+    <div className="flex items-center gap-4 bg-brand-black px-5 py-3">
+      <div className="flex items-center gap-2.5 font-display text-[15px] font-black uppercase tracking-wide text-white">
+        <span className="flex h-6.5 w-6.5 items-center justify-center rounded-full border-2 border-accent text-accent">
           {logo ?? defaultLogo}
         </span>
         LAGOINHA
       </div>
-      <span className="text-[13px] text-ink-soft">
-        / <b className="font-semibold text-paper/90">{appName}</b>
+      <span className="text-[13px] text-white/50">
+        / <b className="font-semibold text-white/90">{appName}</b>
       </span>
       {actions && <div className="ml-auto flex items-center gap-3">{actions}</div>}
       <nav className={`flex gap-1.5 ${actions ? '' : 'ml-auto'}`}>
@@ -44,7 +44,7 @@ export function AppShell({ appName, apps, logo, actions }: AppShellProps) {
             href={app.href}
             className={
               app.active
-                ? 'rounded-full bg-gold px-3 py-1.5 text-[11.5px] font-semibold text-brandBlack'
+                ? 'rounded-full bg-accent px-3 py-1.5 text-[11.5px] font-semibold text-accent-foreground'
                 : 'rounded-full bg-white/[0.06] px-3 py-1.5 text-[11.5px] text-white/70 hover:bg-white/[0.1]'
             }
           >

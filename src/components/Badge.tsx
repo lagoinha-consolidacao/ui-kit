@@ -6,10 +6,10 @@ export interface BadgeProps {
 }
 
 const toneClasses: Record<NonNullable<BadgeProps['tone']>, string> = {
-  success: 'bg-success/15 text-success',
-  warning: 'bg-warning/15 text-warning',
-  danger: 'bg-danger/15 text-danger',
-  neutral: 'bg-line text-ink-soft',
+  success: 'bg-success text-success-foreground',
+  warning: 'bg-warning text-warning-foreground',
+  danger: 'bg-danger text-danger-foreground',
+  neutral: 'bg-surface-alt text-muted-foreground',
 };
 
 /** Selo de status (ex.: Confirmado/Pendente/Cancelado) — cor semântica, nunca o dourado de marca. */

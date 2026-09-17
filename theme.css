@@ -36,6 +36,21 @@
   --color-accent-soft: #F5E4BC;
   --color-accent-soft-foreground: #755717;
 
+  /* Escala numérica invariante (não muda entre claro/escuro, como as
+     escalas padrão do Tailwind) - pra apps que já usam um degradê
+     próprio (ex.: bg-portal-600, bg-lake-500) apontar pra cá em vez de
+     ter a própria paleta. --color-accent-500 == --color-accent. */
+  --color-gold-50: #FDF8EE;
+  --color-gold-100: #F5E4BC;
+  --color-gold-200: #EDD08F;
+  --color-gold-300: #E5BD6E;
+  --color-gold-400: #CBA04C;
+  --color-gold-500: #B9872E;
+  --color-gold-600: #97701F;
+  --color-gold-700: #755717;
+  --color-gold-800: #5A4310;
+  --color-gold-900: #3D2D0A;
+
   --color-bronze: #8C5A3E;
   --color-bronze-soft: #F1E3D8;
 
@@ -123,6 +138,17 @@
   --color-accent-foreground: var(--color-accent-foreground);
   --color-accent-soft: var(--color-accent-soft);
   --color-accent-soft-foreground: var(--color-accent-soft-foreground);
+
+  --color-gold-50: var(--color-gold-50);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-200: var(--color-gold-200);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-700: var(--color-gold-700);
+  --color-gold-800: var(--color-gold-800);
+  --color-gold-900: var(--color-gold-900);
 
   --color-bronze: var(--color-bronze);
   --color-bronze-soft: var(--color-bronze-soft);

@@ -1,6 +1,6 @@
 {
   "name": "@lagoinha/ui-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Design system compartilhado do ecossistema Lagoinha: tokens, preset Tailwind e componentes de shell.",
   "license": "UNLICENSED",
   "private": true,
@@ -13,11 +13,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./theme.css": "./theme.css"
+    "./theme.css": "./theme.css",
+    "./logo.svg": "./logo.svg"
   },
   "files": [
     "dist",
-    "theme.css"
+    "theme.css",
+    "logo.svg"
   ],
   "scripts": {
     "build": "tsup",

@@ -31,7 +31,17 @@ setThemeMode('dark'); // 'light' | 'dark' | 'system'
 
 Aplica a classe `.dark` em `<html>` sozinho, com persistência em `localStorage` e resposta a mudança de preferência do sistema quando o modo é `'system'`.
 
-**3. Usar os componentes:**
+**3. Logo:**
+
+```tsx
+import logoUrl from '@lagoinha/ui-kit/logo.svg';
+
+<img src={logoUrl} alt="Lagoinha" className="w-16 h-16" />
+```
+
+Selo oficial (mesmo arquivo usado no certifica-web) — fonte única, evita cada app guardar sua própria cópia.
+
+**4. Usar os componentes:**
 
 ```tsx
 import { AppShell, Button, Badge } from '@lagoinha/ui-kit';

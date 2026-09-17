@@ -1,0 +1,77 @@
+/**
+ * Tokens de marca do ecossistema Lagoinha.
+ * Fonte: identidade real de lagoinhaalphaville.com.br (preto + dourado),
+ * ajustada para uso em telas de dados (não só hero de marketing).
+ *
+ * Import direto: @import "@lagoinha/ui-kit/tokens.css";
+ */
+
+:root {
+  --brand-black: #0B0A08;
+  --ink: #1C1917;
+  --ink-soft: #56504A;
+  --paper: #FAF8F4;
+  --surface: #FFFFFF;
+  --line: #E6E1D8;
+
+  --gold-100: #F5E4BC;
+  --gold-300: #E5BD6E;
+  --gold-500: #B9872E;
+  --gold-600: #97701F;
+  --gold-700: #755717;
+
+  --bronze: #8C5A3E;
+  --bronze-soft: #F1E3D8;
+
+  --success: #3F7D52;
+  --warning: #C1592A;
+  --danger: #B23B3B;
+
+  --font-display: 'Big Shoulders Display', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #F3EFE7;
+    --ink-soft: #C6BEB2;
+    --paper: #121110;
+    --surface: #1B1917;
+    --line: #322E29;
+
+    --gold-100: #4A3712;
+    --gold-300: #755717;
+    --gold-500: #D6A44A;
+    --gold-600: #E5BD6E;
+    --gold-700: #F5E4BC;
+
+    --bronze: #C4886A;
+    --bronze-soft: #2E211A;
+
+    --success: #6FBE85;
+    --warning: #E58256;
+    --danger: #E07070;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ink: #F3EFE7;
+  --ink-soft: #C6BEB2;
+  --paper: #121110;
+  --surface: #1B1917;
+  --line: #322E29;
+
+  --gold-100: #4A3712;
+  --gold-300: #755717;
+  --gold-500: #D6A44A;
+  --gold-600: #E5BD6E;
+  --gold-700: #F5E4BC;
+
+  --bronze: #C4886A;
+  --bronze-soft: #2E211A;
+
+  --success: #6FBE85;
+  --warning: #E58256;
+  --danger: #E07070;
+}

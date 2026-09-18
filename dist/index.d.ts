@@ -32,8 +32,16 @@ interface BadgeProps {
 /** Selo de status (ex.: Confirmado/Pendente/Cancelado) — cor semântica, nunca o dourado de marca. */
 declare function Badge({ tone, children }: BadgeProps): react.JSX.Element;
 
+interface ThemeToggleIconProps {
+    /**
+     * Substitui as classes de cor padrão (pensadas pra uma superfície que já
+     * muda com o tema, ex. bg-surface) — necessário numa barra sempre escura
+     * (ex. bg-brand-black), onde os tokens adaptáveis ficariam sem contraste.
+     */
+    className?: string;
+}
 /** Botão único que cicla claro → escuro → sistema — pro rodapé de uma sidebar. */
-declare function ThemeToggleIcon(): react.JSX.Element;
+declare function ThemeToggleIcon({ className }?: ThemeToggleIconProps): react.JSX.Element;
 /** Controle de 3 opções lado a lado, com label — pra um menu/tela com mais espaço. */
 declare function ThemeToggleSegmented(): react.JSX.Element;
 

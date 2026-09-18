@@ -12,8 +12,17 @@ function useTheme() {
   return { mode, effective, setThemeMode };
 }
 
+export interface ThemeToggleIconProps {
+  /**
+   * Substitui as classes de cor padrão (pensadas pra uma superfície que já
+   * muda com o tema, ex. bg-surface) — necessário numa barra sempre escura
+   * (ex. bg-brand-black), onde os tokens adaptáveis ficariam sem contraste.
+   */
+  className?: string;
+}
+
 /** Botão único que cicla claro → escuro → sistema — pro rodapé de uma sidebar. */
-export function ThemeToggleIcon() {
+export function ThemeToggleIcon({ className }: ThemeToggleIconProps = {}) {
   const { mode, setThemeMode } = useTheme();
   const Icon = ICONS[mode];
 
@@ -26,7 +35,7 @@ export function ThemeToggleIcon() {
     <button
       onClick={cycle}
       title={`Tema: ${LABELS[mode]} (clique para alternar)`}
-      className="rounded-lg p-1.5 text-subtle-foreground transition-colors hover:bg-surface-hover hover:text-foreground-secondary"
+      className={className ?? 'rounded-lg p-1.5 text-subtle-foreground transition-colors hover:bg-surface-hover hover:text-foreground-secondary'}
     >
       <Icon size={15} />
     </button>

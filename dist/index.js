@@ -104,7 +104,7 @@ function useTheme() {
   const effective = useSyncExternalStore(subscribeTheme, getEffectiveTheme);
   return { mode, effective, setThemeMode };
 }
-function ThemeToggleIcon() {
+function ThemeToggleIcon({ className } = {}) {
   const { mode, setThemeMode: setThemeMode2 } = useTheme();
   const Icon = ICONS[mode];
   function cycle() {
@@ -116,7 +116,7 @@ function ThemeToggleIcon() {
     {
       onClick: cycle,
       title: `Tema: ${LABELS[mode]} (clique para alternar)`,
-      className: "rounded-lg p-1.5 text-subtle-foreground transition-colors hover:bg-surface-hover hover:text-foreground-secondary",
+      className: className ?? "rounded-lg p-1.5 text-subtle-foreground transition-colors hover:bg-surface-hover hover:text-foreground-secondary",
       children: /* @__PURE__ */ jsx4(Icon, { size: 15 })
     }
   );

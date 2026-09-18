@@ -44,6 +44,10 @@ function Badge({ tone = "neutral", children }) {
   return /* @__PURE__ */ jsx3("span", { className: `rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${toneClasses[tone]}`, children });
 }
 
+// src/components/ThemeToggle.tsx
+import { Sun, Moon, Monitor } from "lucide-react";
+import { useSyncExternalStore } from "react";
+
 // src/theme.ts
 var STORAGE_KEY = "theme";
 var mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -89,10 +93,59 @@ function subscribeTheme(cb) {
   listeners.add(cb);
   return () => listeners.delete(cb);
 }
+
+// src/components/ThemeToggle.tsx
+import { jsx as jsx4, jsxs as jsxs2 } from "react/jsx-runtime";
+var ORDER = ["light", "dark", "system"];
+var ICONS = { light: Sun, dark: Moon, system: Monitor };
+var LABELS = { light: "Claro", dark: "Escuro", system: "Sistema" };
+function useTheme() {
+  const mode = useSyncExternalStore(subscribeTheme, getThemeMode);
+  const effective = useSyncExternalStore(subscribeTheme, getEffectiveTheme);
+  return { mode, effective, setThemeMode };
+}
+function ThemeToggleIcon() {
+  const { mode, setThemeMode: setThemeMode2 } = useTheme();
+  const Icon = ICONS[mode];
+  function cycle() {
+    const next = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
+    setThemeMode2(next);
+  }
+  return /* @__PURE__ */ jsx4(
+    "button",
+    {
+      onClick: cycle,
+      title: `Tema: ${LABELS[mode]} (clique para alternar)`,
+      className: "rounded-lg p-1.5 text-subtle-foreground transition-colors hover:bg-surface-hover hover:text-foreground-secondary",
+      children: /* @__PURE__ */ jsx4(Icon, { size: 15 })
+    }
+  );
+}
+function ThemeToggleSegmented() {
+  const { mode, setThemeMode: setThemeMode2 } = useTheme();
+  return /* @__PURE__ */ jsx4("div", { className: "flex gap-0.5 rounded-lg bg-surface-alt p-0.5", children: ORDER.map((m) => {
+    const Icon = ICONS[m];
+    return /* @__PURE__ */ jsxs2(
+      "button",
+      {
+        onClick: () => setThemeMode2(m),
+        title: LABELS[m],
+        className: `flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors ${mode === m ? "bg-surface text-accent shadow-sm" : "text-muted-foreground hover:text-foreground-secondary"}`,
+        children: [
+          /* @__PURE__ */ jsx4(Icon, { size: 13 }),
+          LABELS[m]
+        ]
+      },
+      m
+    );
+  }) });
+}
 export {
   AppShell,
   Badge,
   Button,
+  ThemeToggleIcon,
+  ThemeToggleSegmented,
   getEffectiveTheme,
   getThemeMode,
   setThemeMode,

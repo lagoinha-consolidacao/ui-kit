@@ -32,6 +32,11 @@ interface BadgeProps {
 /** Selo de status (ex.: Confirmado/Pendente/Cancelado) — cor semântica, nunca o dourado de marca. */
 declare function Badge({ tone, children }: BadgeProps): react.JSX.Element;
 
+/** Botão único que cicla claro → escuro → sistema — pro rodapé de uma sidebar. */
+declare function ThemeToggleIcon(): react.JSX.Element;
+/** Controle de 3 opções lado a lado, com label — pra um menu/tela com mais espaço. */
+declare function ThemeToggleSegmented(): react.JSX.Element;
+
 /**
  * Gerenciador de modo claro/escuro (localStorage + prefers-color-scheme),
  * compartilhado entre todos os apps — trazido do certifica-web, que foi o
@@ -43,4 +48,4 @@ declare function getEffectiveTheme(): 'light' | 'dark';
 declare function setThemeMode(next: ThemeMode): void;
 declare function subscribeTheme(cb: () => void): () => boolean;
 
-export { AppShell, type AppShellApp, type AppShellProps, Badge, type BadgeProps, Button, type ButtonProps, type ThemeMode, getEffectiveTheme, getThemeMode, setThemeMode, subscribeTheme };
+export { AppShell, type AppShellApp, type AppShellProps, Badge, type BadgeProps, Button, type ButtonProps, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, getEffectiveTheme, getThemeMode, setThemeMode, subscribeTheme };

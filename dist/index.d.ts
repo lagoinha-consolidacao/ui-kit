@@ -46,9 +46,16 @@ declare function ThemeToggleIcon({ className }?: ThemeToggleIconProps): react.JS
 declare function ThemeToggleSegmented(): react.JSX.Element;
 
 /**
- * Gerenciador de modo claro/escuro (localStorage + prefers-color-scheme),
+ * Gerenciador de modo claro/escuro (prefers-color-scheme + persistência),
  * compartilhado entre todos os apps — trazido do certifica-web, que foi o
  * primeiro a construir isso, sem nada específico daquele app.
+ *
+ * Persistência via cookie no domínio .lagoinha.app (não localStorage, que
+ * é isolado por subdomínio) - mudar o tema em um app reflete em todos os
+ * outros na próxima vez que abrirem, mesmo mecanismo já usado pro cookie
+ * de SSO. Em dev local (hostname não termina em .lagoinha.app), cai pra
+ * localStorage - um cookie com Domain=.lagoinha.app nunca seria aceito
+ * pelo navegador fora desse domínio.
  */
 type ThemeMode = 'light' | 'dark' | 'system';
 declare function getThemeMode(): ThemeMode;

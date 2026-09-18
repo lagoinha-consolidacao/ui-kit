@@ -49,15 +49,36 @@ import { Sun, Moon, Monitor } from "lucide-react";
 import { useSyncExternalStore } from "react";
 
 // src/theme.ts
+var COOKIE_KEY = "lagoinha_theme";
 var STORAGE_KEY = "theme";
+var SHARED_DOMAIN = ".lagoinha.app";
+var usesSharedCookie = window.location.hostname.endsWith("lagoinha.app");
 var mq = window.matchMedia("(prefers-color-scheme: dark)");
+function readCookie(name) {
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+function writeCookie(name, value) {
+  const maxAge = 60 * 60 * 24 * 365;
+  document.cookie = `${name}=${encodeURIComponent(value)}; Domain=${SHARED_DOMAIN}; Path=/; Max-Age=${maxAge}; SameSite=Lax`;
+}
 function readStored() {
   try {
-    const v = localStorage.getItem(STORAGE_KEY);
+    const v = usesSharedCookie ? readCookie(COOKIE_KEY) : localStorage.getItem(STORAGE_KEY);
     if (v === "light" || v === "dark" || v === "system") return v;
   } catch {
   }
   return "system";
+}
+function writeStored(mode) {
+  try {
+    if (usesSharedCookie) {
+      writeCookie(COOKIE_KEY, mode);
+    } else {
+      localStorage.setItem(STORAGE_KEY, mode);
+    }
+  } catch {
+  }
 }
 function computeEffective(mode) {
   return mode === "system" ? mq.matches ? "dark" : "light" : mode;
@@ -82,10 +103,7 @@ function getEffectiveTheme() {
 }
 function setThemeMode(next) {
   currentMode = next;
-  try {
-    localStorage.setItem(STORAGE_KEY, next);
-  } catch {
-  }
+  writeStored(next);
   applyToDom(currentMode);
   listeners.forEach((l) => l());
 }

@@ -30,26 +30,31 @@
   --color-muted-foreground: #6B6259;
   --color-subtle-foreground: #948A7D;
 
-  --color-accent: #B9872E;
-  --color-accent-hover: #97701F;
-  --color-accent-foreground: #1A1305;
-  --color-accent-soft: #F5E4BC;
-  --color-accent-soft-foreground: #755717;
+  /* v2 (2026-09-18) - "latão antigo": mais saturado e mais laranja-marrom,
+     menos amarelo-mostarda que a v1. Bruno comparou as duas em várias
+     telas reais (claro+escuro) e escolheu esta - ver artifact "Teste de
+     tema — Espaços". Texto sobre o accent agora é claro (o tom ficou
+     escuro/rico demais pra texto escuro continuar legível). */
+  --color-accent: #A66A1E;
+  --color-accent-hover: #8A5718;
+  --color-accent-foreground: #FFF8EC;
+  --color-accent-soft: #F5E2C4;
+  --color-accent-soft-foreground: #6E4413;
 
   /* Escala numérica invariante (não muda entre claro/escuro, como as
      escalas padrão do Tailwind) - pra apps que já usam um degradê
      próprio (ex.: bg-portal-600, bg-lake-500) apontar pra cá em vez de
      ter a própria paleta. --color-accent-500 == --color-accent. */
-  --color-gold-50: #FDF8EE;
-  --color-gold-100: #F5E4BC;
-  --color-gold-200: #EDD08F;
-  --color-gold-300: #E5BD6E;
-  --color-gold-400: #CBA04C;
-  --color-gold-500: #B9872E;
-  --color-gold-600: #97701F;
-  --color-gold-700: #755717;
-  --color-gold-800: #5A4310;
-  --color-gold-900: #3D2D0A;
+  --color-gold-50: #FBF3E6;
+  --color-gold-100: #F5E2C4;
+  --color-gold-200: #E9C68F;
+  --color-gold-300: #DCAA61;
+  --color-gold-400: #C68A3D;
+  --color-gold-500: #A66A1E;
+  --color-gold-600: #8A5718;
+  --color-gold-700: #6E4413;
+  --color-gold-800: #4D2F0D;
+  --color-gold-900: #332008;
 
   --color-bronze: #8C5A3E;
   --color-bronze-soft: #F1E3D8;
@@ -89,11 +94,11 @@
   --color-muted-foreground: #A69C8D;
   --color-subtle-foreground: #7D7468;
 
-  --color-accent: #D6A44A;
-  --color-accent-hover: #E5BD6E;
-  --color-accent-foreground: #1A1305;
-  --color-accent-soft: rgb(214 164 74 / 0.15);
-  --color-accent-soft-foreground: #E5BD6E;
+  --color-accent: #C9924A;
+  --color-accent-hover: #D9A868;
+  --color-accent-foreground: #241505;
+  --color-accent-soft: rgb(201 146 74 / 0.15);
+  --color-accent-soft-foreground: #D9A868;
 
   --color-bronze: #C4886A;
   --color-bronze-soft: #2E211A;

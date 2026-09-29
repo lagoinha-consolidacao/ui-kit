@@ -247,7 +247,7 @@ function LoginInPeace({
     setErro("");
     try {
       const tokens = await autenticarNoIam(email, senha, { apiUrl, mensagens });
-      await onAuthenticated(tokens, { email: email.trim(), senha });
+      await onAuthenticated(tokens);
     } catch (err) {
       setErro(err instanceof Error && err.message ? err.message : mensagemDeErro("outro", mensagens));
     } finally {

@@ -53,10 +53,11 @@ export interface LoginInPeaceProps {
   /**
    * Chamado depois que o InPeace confirma a senha. Faça aqui o que é do app (buscar o
    * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
-   * O 2º argumento traz e-mail e senha só pra apps que precisam revalidá-los em outra
-   * rota (ex.: o login de aluno do certifica); a maioria pode ignorar.
+   * A senha nunca sai do formulário: troque o token do iam-api por uma sessão do app
+   * (revalidar a senha em outra rota espalharia a credencial e, se fosse na URL, ela
+   * iria parar nos logs de acesso).
    */
-  onAuthenticated: (tokens: LoginTokens, credenciais: { email: string; senha: string }) => void | Promise<void>;
+  onAuthenticated: (tokens: LoginTokens) => void | Promise<void>;
   /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
   mensagens?: Partial<Record<ChaveMensagem, string>>;
   /** Link "Esqueci a senha" (opcional; sem ele o link não aparece). */
@@ -95,7 +96,7 @@ export function LoginInPeace({
     setErro('');
     try {
       const tokens = await autenticarNoIam(email, senha, { apiUrl, mensagens });
-      await onAuthenticated(tokens, { email: email.trim(), senha });
+      await onAuthenticated(tokens);
     } catch (err) {
       setErro(err instanceof Error && err.message ? err.message : mensagemDeErro('outro', mensagens));
     } finally {

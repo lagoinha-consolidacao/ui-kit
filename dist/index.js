@@ -158,14 +158,167 @@ function ThemeToggleSegmented() {
     );
   }) });
 }
+
+// src/components/LoginInPeace.tsx
+import { Eye, EyeOff } from "lucide-react";
+import { useId, useState } from "react";
+
+// src/login.ts
+var API_IAM_PADRAO = "https://acessos-api.lagoinha.app";
+var MENSAGENS_PADRAO = {
+  "401": "E-mail ou senha do InPeace incorretos.",
+  "403": "Login confirmado no InPeace, mas essa conta n\xE3o tem acesso a este app.",
+  "429": "Muitas tentativas seguidas. Aguarde um minuto e tente de novo.",
+  "503": "N\xE3o foi poss\xEDvel falar com o InPeace agora. Tente de novo em instantes.",
+  rede: "Sem conex\xE3o com o servidor. Verifique sua internet e tente de novo.",
+  outro: "N\xE3o foi poss\xEDvel entrar. Tente de novo em instantes."
+};
+var LoginError = class extends Error {
+  constructor(message, status) {
+    super(message);
+    this.name = "LoginError";
+    this.status = status;
+  }
+};
+function mensagemDeErro(chave, personalizadas = {}) {
+  return personalizadas[chave] ?? MENSAGENS_PADRAO[String(chave)] ?? personalizadas.outro ?? MENSAGENS_PADRAO.outro;
+}
+async function autenticarNoIam(email, senha, { apiUrl = API_IAM_PADRAO, mensagens = {}, fetchImpl = fetch, timeoutMs = 2e4 } = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let resp;
+  try {
+    resp = await fetchImpl(`${apiUrl}/auth/login-inpeace`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email.trim(), senha }),
+      credentials: "include",
+      signal: controller.signal
+    });
+  } catch {
+    throw new LoginError(mensagemDeErro("rede", mensagens));
+  } finally {
+    clearTimeout(timer);
+  }
+  if (!resp.ok) throw new LoginError(mensagemDeErro(resp.status, mensagens), resp.status);
+  try {
+    return await resp.json();
+  } catch {
+    throw new LoginError(mensagemDeErro("outro", mensagens), resp.status);
+  }
+}
+
+// src/components/LoginInPeace.tsx
+import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
+function LoginInPeace({
+  nome,
+  descricao,
+  icone,
+  logoUrl,
+  apiUrl,
+  onAuthenticated,
+  mensagens,
+  esqueciSenhaUrl,
+  rodape
+}) {
+  const id = useId();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
+  async function enviar(e) {
+    e.preventDefault();
+    if (carregando) return;
+    setCarregando(true);
+    setErro("");
+    try {
+      const tokens = await autenticarNoIam(email, senha, { apiUrl, mensagens });
+      await onAuthenticated(tokens);
+    } catch (err) {
+      setErro(err instanceof Error && err.message ? err.message : mensagemDeErro("outro", mensagens));
+    } finally {
+      setCarregando(false);
+    }
+  }
+  const campo = "w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
+  const rotulo = "mb-1 block text-sm font-medium text-foreground-secondary";
+  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black p-4", children: /* @__PURE__ */ jsxs3("div", { className: "w-full max-w-sm rounded-xl border border-border bg-surface p-4 shadow-sm", children: [
+    /* @__PURE__ */ jsxs3("div", { className: "mb-6 text-center", children: [
+      logoUrl && /* @__PURE__ */ jsx5("img", { src: logoUrl, alt: "Lagoinha", className: "mx-auto mb-3 h-14 w-14 dark:invert" }),
+      /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold text-accent", children: [
+        icone,
+        nome
+      ] }),
+      descricao && /* @__PURE__ */ jsx5("p", { className: "mt-1 text-sm text-muted-foreground", children: descricao })
+    ] }),
+    /* @__PURE__ */ jsx5("p", { className: "mb-4 text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
+    /* @__PURE__ */ jsxs3("form", { onSubmit: enviar, className: "space-y-4", "aria-busy": carregando, children: [
+      /* @__PURE__ */ jsxs3("div", { children: [
+        /* @__PURE__ */ jsx5("label", { htmlFor: `${id}-email`, className: rotulo, children: "E-mail do InPeace" }),
+        /* @__PURE__ */ jsx5(
+          "input",
+          {
+            id: `${id}-email`,
+            type: "email",
+            inputMode: "email",
+            autoComplete: "username",
+            autoFocus: true,
+            required: true,
+            value: email,
+            onChange: (e) => setEmail(e.target.value),
+            className: campo
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs3("div", { children: [
+        /* @__PURE__ */ jsx5("label", { htmlFor: `${id}-senha`, className: rotulo, children: "Senha do InPeace" }),
+        /* @__PURE__ */ jsxs3("div", { className: "relative", children: [
+          /* @__PURE__ */ jsx5(
+            "input",
+            {
+              id: `${id}-senha`,
+              type: mostrarSenha ? "text" : "password",
+              autoComplete: "current-password",
+              required: true,
+              value: senha,
+              onChange: (e) => setSenha(e.target.value),
+              className: `${campo} pr-10`
+            }
+          ),
+          /* @__PURE__ */ jsx5(
+            "button",
+            {
+              type: "button",
+              onClick: () => setMostrarSenha((v) => !v),
+              "aria-label": mostrarSenha ? "Ocultar senha" : "Mostrar senha",
+              "aria-pressed": mostrarSenha,
+              className: "absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground",
+              children: mostrarSenha ? /* @__PURE__ */ jsx5(EyeOff, { className: "h-4 w-4" }) : /* @__PURE__ */ jsx5(Eye, { className: "h-4 w-4" })
+            }
+          )
+        ] })
+      ] }),
+      erro && /* @__PURE__ */ jsx5("p", { role: "alert", className: "text-sm text-danger-foreground", children: erro }),
+      /* @__PURE__ */ jsx5(Button, { type: "submit", className: "w-full disabled:cursor-not-allowed disabled:opacity-60", disabled: carregando, children: carregando ? "Entrando\u2026" : "Entrar" }),
+      esqueciSenhaUrl && /* @__PURE__ */ jsx5("p", { className: "text-center text-xs", children: /* @__PURE__ */ jsx5("a", { href: esqueciSenhaUrl, className: "text-muted-foreground underline hover:text-foreground", children: "Esqueci a senha" }) })
+    ] }),
+    rodape && /* @__PURE__ */ jsx5("div", { className: "mt-4", children: rodape })
+  ] }) });
+}
 export {
+  API_IAM_PADRAO,
   AppShell,
   Badge,
   Button,
+  LoginError,
+  LoginInPeace,
   ThemeToggleIcon,
   ThemeToggleSegmented,
+  autenticarNoIam,
   getEffectiveTheme,
   getThemeMode,
+  mensagemDeErro,
   setThemeMode,
   subscribeTheme
 };

@@ -45,6 +45,67 @@ declare function ThemeToggleIcon({ className }?: ThemeToggleIconProps): react.JS
 /** Controle de 3 opções lado a lado, com label — pra um menu/tela com mais espaço. */
 declare function ThemeToggleSegmented(): react.JSX.Element;
 
+interface LoginTokens {
+    access_token: string;
+    refresh_token: string;
+}
+/** Chaves aceitas em `mensagens`: um status HTTP, `rede` (sem resposta) ou `outro`. */
+type ChaveMensagem = number | 'rede' | 'outro';
+declare const API_IAM_PADRAO = "https://acessos-api.lagoinha.app";
+/** Erro de login com mensagem pronta pra mostrar na tela; `status` é o HTTP, quando houve resposta. */
+declare class LoginError extends Error {
+    status?: number;
+    constructor(message: string, status?: number);
+}
+/** Mensagem pra tela: a específica do app (se houver) vence a padrão. */
+declare function mensagemDeErro(chave: ChaveMensagem, personalizadas?: Partial<Record<ChaveMensagem, string>>): string;
+interface AutenticarOpcoes {
+    apiUrl?: string;
+    mensagens?: Partial<Record<ChaveMensagem, string>>;
+    /** Injetável só pra teste. */
+    fetchImpl?: typeof fetch;
+    /** Tempo máximo de espera, em ms. */
+    timeoutMs?: number;
+}
+/**
+ * Confere e-mail e senha no iam-api (`POST /auth/login-inpeace`) e devolve os tokens.
+ * `credentials: 'include'` é obrigatório: sem ele o navegador descarta o Set-Cookie do
+ * SSO entre apps. A senha só passa por aqui — nunca é guardada. Levanta `LoginError`
+ * com a mensagem certa pra cada situação (senha errada, sem vínculo, limite de
+ * tentativas, InPeace fora do ar, sem rede).
+ */
+declare function autenticarNoIam(email: string, senha: string, { apiUrl, mensagens, fetchImpl, timeoutMs }?: AutenticarOpcoes): Promise<LoginTokens>;
+
+interface LoginInPeaceProps {
+    /** Nome do app (ex.: "LakeSpace"). */
+    nome: string;
+    /** Uma linha sobre o app, abaixo do nome (ex.: "Reserva de espaços e times"). */
+    descricao?: string;
+    /** Ícone do app, ao lado do nome. */
+    icone?: ReactNode;
+    /** URL do logo (ex.: `import logoUrl from '@lagoinha/ui-kit/logo.svg'`). */
+    logoUrl?: string;
+    /** URL do iam-api. Padrão: https://acessos-api.lagoinha.app */
+    apiUrl?: string;
+    /**
+     * Chamado depois que o InPeace confirma a senha. Faça aqui o que é do app (buscar o
+     * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
+     */
+    onAuthenticated: (tokens: LoginTokens) => void | Promise<void>;
+    /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
+    mensagens?: Partial<Record<ChaveMensagem, string>>;
+    /** Link "Esqueci a senha" (opcional; sem ele o link não aparece). */
+    esqueciSenhaUrl?: string;
+    /** Conteúdo extra abaixo do formulário (ex.: fluxo de aluno, agendamento de membro). */
+    rodape?: ReactNode;
+}
+/**
+ * Tela de login única do ecossistema: e-mail e senha do InPeace validados no iam-api
+ * (SSO). Mesma aparência, mesmas mensagens e mesmo tratamento de erro em todos os apps —
+ * o que muda de um app pra outro entra por props e por `onAuthenticated`.
+ */
+declare function LoginInPeace({ nome, descricao, icone, logoUrl, apiUrl, onAuthenticated, mensagens, esqueciSenhaUrl, rodape, }: LoginInPeaceProps): react.JSX.Element;
+
 /**
  * Gerenciador de modo claro/escuro (prefers-color-scheme + persistência),
  * compartilhado entre todos os apps — trazido do certifica-web, que foi o
@@ -63,4 +124,4 @@ declare function getEffectiveTheme(): 'light' | 'dark';
 declare function setThemeMode(next: ThemeMode): void;
 declare function subscribeTheme(cb: () => void): () => boolean;
 
-export { AppShell, type AppShellApp, type AppShellProps, Badge, type BadgeProps, Button, type ButtonProps, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, getEffectiveTheme, getThemeMode, setThemeMode, subscribeTheme };
+export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, LoginError, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };

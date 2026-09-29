@@ -5,6 +5,10 @@ export type { ButtonProps } from './components/Button';
 export { Badge } from './components/Badge';
 export type { BadgeProps } from './components/Badge';
 export { ThemeToggleIcon, ThemeToggleSegmented } from './components/ThemeToggle';
+export { LoginInPeace } from './components/LoginInPeace';
+export type { LoginInPeaceProps } from './components/LoginInPeace';
+export { autenticarNoIam, mensagemDeErro, LoginError, API_IAM_PADRAO } from './login';
+export type { LoginTokens, ChaveMensagem, AutenticarOpcoes } from './login';
 
 export {
   getThemeMode,

@@ -183,12 +183,12 @@ var LoginError = class extends Error {
 function mensagemDeErro(chave, personalizadas = {}) {
   return personalizadas[chave] ?? MENSAGENS_PADRAO[String(chave)] ?? personalizadas.outro ?? MENSAGENS_PADRAO.outro;
 }
-async function autenticarNoIam(email, senha, { apiUrl = API_IAM_PADRAO, mensagens = {}, fetchImpl = fetch, timeoutMs = 2e4 } = {}) {
+async function postarLogin(rota, email, senha, { apiUrl = API_IAM_PADRAO, mensagens = {}, fetchImpl = fetch, timeoutMs = 2e4 } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   let resp;
   try {
-    resp = await fetchImpl(`${apiUrl}/auth/login-inpeace`, {
+    resp = await fetchImpl(`${apiUrl}${rota}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email.trim(), senha }),
@@ -205,6 +205,22 @@ async function autenticarNoIam(email, senha, { apiUrl = API_IAM_PADRAO, mensagen
     return await resp.json();
   } catch {
     throw new LoginError(mensagemDeErro("outro", mensagens), resp.status);
+  }
+}
+function autenticarNoIam(email, senha, opcoes = {}) {
+  return postarLogin("/auth/login-inpeace", email, senha, opcoes);
+}
+function autenticarMembroNoIam(email, senha, opcoes = {}) {
+  return postarLogin("/auth/login-membro", email, senha, opcoes);
+}
+async function autenticarComFallbackDeMembro(email, senha, { permitirMembro = false, ...opcoes } = {}) {
+  try {
+    return { tokens: await autenticarNoIam(email, senha, opcoes), membro: false };
+  } catch (err) {
+    if (permitirMembro && err instanceof LoginError && err.status === 403) {
+      return { tokens: await autenticarMembroNoIam(email, senha, opcoes), membro: true };
+    }
+    throw err;
   }
 }
 
@@ -230,6 +246,7 @@ function LoginInPeace({
   logoUrl,
   apiUrl,
   onAuthenticated,
+  permitirMembro,
   mensagens,
   esqueciSenhaUrl,
   rodape
@@ -246,8 +263,8 @@ function LoginInPeace({
     setCarregando(true);
     setErro("");
     try {
-      const tokens = await autenticarNoIam(email, senha, { apiUrl, mensagens });
-      await onAuthenticated(tokens);
+      const { tokens, membro } = await autenticarComFallbackDeMembro(email, senha, { apiUrl, mensagens, permitirMembro });
+      await onAuthenticated(tokens, { membro });
     } catch (err) {
       setErro(err instanceof Error && err.message ? err.message : mensagemDeErro("outro", mensagens));
     } finally {
@@ -321,6 +338,8 @@ export {
   LoginInPeace,
   ThemeToggleIcon,
   ThemeToggleSegmented,
+  autenticarComFallbackDeMembro,
+  autenticarMembroNoIam,
   autenticarNoIam,
   getEffectiveTheme,
   getThemeMode,

@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from 'lucide-react';
 import { useId, useState, type FormEvent, type ReactNode } from 'react';
 import {
-  autenticarNoIam,
+  autenticarComFallbackDeMembro,
   mensagemDeErro,
   type ChaveMensagem,
   type LoginTokens,
@@ -55,9 +55,15 @@ export interface LoginInPeaceProps {
    * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
    * A senha nunca sai do formulário: troque o token do iam-api por uma sessão do app
    * (revalidar a senha em outra rota espalharia a credencial e, se fosse na URL, ela
-   * iria parar nos logs de acesso).
+   * iria parar nos logs de acesso). `contexto.membro` é true quando a pessoa entrou pelo
+   * login de membro (só com `permitirMembro`): não tem vínculo de equipe em nenhum app.
    */
-  onAuthenticated: (tokens: LoginTokens) => void | Promise<void>;
+  onAuthenticated: (tokens: LoginTokens, contexto: { membro: boolean }) => void | Promise<void>;
+  /**
+   * Quando o iam diz que a pessoa não tem vínculo de equipe (403), tenta o login de membro com
+   * a mesma senha em vez de mostrar erro. Ligue em apps que também atendem membros comuns.
+   */
+  permitirMembro?: boolean;
   /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
   mensagens?: Partial<Record<ChaveMensagem, string>>;
   /** Link "Esqueci a senha" (opcional; sem ele o link não aparece). */
@@ -78,6 +84,7 @@ export function LoginInPeace({
   logoUrl,
   apiUrl,
   onAuthenticated,
+  permitirMembro,
   mensagens,
   esqueciSenhaUrl,
   rodape,
@@ -95,8 +102,8 @@ export function LoginInPeace({
     setCarregando(true);
     setErro('');
     try {
-      const tokens = await autenticarNoIam(email, senha, { apiUrl, mensagens });
-      await onAuthenticated(tokens);
+      const { tokens, membro } = await autenticarComFallbackDeMembro(email, senha, { apiUrl, mensagens, permitirMembro });
+      await onAuthenticated(tokens, { membro });
     } catch (err) {
       setErro(err instanceof Error && err.message ? err.message : mensagemDeErro('outro', mensagens));
     } finally {

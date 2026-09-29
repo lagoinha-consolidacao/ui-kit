@@ -47,7 +47,8 @@ declare function ThemeToggleSegmented(): react.JSX.Element;
 
 interface LoginTokens {
     access_token: string;
-    refresh_token: string;
+    /** Ausente no token de membro (o iam não emite refresh pra ele). */
+    refresh_token?: string;
 }
 /** Chaves aceitas em `mensagens`: um status HTTP, `rede` (sem resposta) ou `outro`. */
 type ChaveMensagem = number | 'rede' | 'outro';
@@ -68,13 +69,28 @@ interface AutenticarOpcoes {
     timeoutMs?: number;
 }
 /**
- * Confere e-mail e senha no iam-api (`POST /auth/login-inpeace`) e devolve os tokens.
- * `credentials: 'include'` é obrigatório: sem ele o navegador descarta o Set-Cookie do
- * SSO entre apps. A senha só passa por aqui — nunca é guardada. Levanta `LoginError`
- * com a mensagem certa pra cada situação (senha errada, sem vínculo, limite de
- * tentativas, InPeace fora do ar, sem rede).
+ * Confere e-mail e senha no iam-api (`POST /auth/login-inpeace`, login de EQUIPE) e devolve os
+ * tokens. `credentials: 'include'` é obrigatório: sem ele o navegador descarta o Set-Cookie do
+ * SSO entre apps. A senha só passa por aqui — nunca é guardada. Levanta `LoginError` com a
+ * mensagem certa pra cada situação (senha errada, sem vínculo, limite de tentativas, InPeace
+ * fora do ar, sem rede). 403 = senha certa, mas sem vínculo de equipe em nenhum app.
  */
-declare function autenticarNoIam(email: string, senha: string, { apiUrl, mensagens, fetchImpl, timeoutMs }?: AutenticarOpcoes): Promise<LoginTokens>;
+declare function autenticarNoIam(email: string, senha: string, opcoes?: AutenticarOpcoes): Promise<LoginTokens>;
+/** Login de MEMBRO comum (`POST /auth/login-membro`): só exige a senha do InPeace, sem vínculo de equipe. */
+declare function autenticarMembroNoIam(email: string, senha: string, opcoes?: AutenticarOpcoes): Promise<LoginTokens>;
+interface AutenticarComMembroOpcoes extends AutenticarOpcoes {
+    /** Quando o iam responde 403 (sem vínculo de equipe), tenta o login de membro com a mesma senha. */
+    permitirMembro?: boolean;
+}
+/**
+ * Login da equipe e, se habilitado, cai no de membro quando a pessoa não tem vínculo de equipe
+ * (403). Só o 403 dispara a queda: senha errada (401), limite de tentativas e falhas de rede
+ * seguem como erro. `membro` diz qual dos dois valeu.
+ */
+declare function autenticarComFallbackDeMembro(email: string, senha: string, { permitirMembro, ...opcoes }?: AutenticarComMembroOpcoes): Promise<{
+    tokens: LoginTokens;
+    membro: boolean;
+}>;
 
 interface LoginFrameProps {
     nome: string;
@@ -105,9 +121,17 @@ interface LoginInPeaceProps {
      * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
      * A senha nunca sai do formulário: troque o token do iam-api por uma sessão do app
      * (revalidar a senha em outra rota espalharia a credencial e, se fosse na URL, ela
-     * iria parar nos logs de acesso).
+     * iria parar nos logs de acesso). `contexto.membro` é true quando a pessoa entrou pelo
+     * login de membro (só com `permitirMembro`): não tem vínculo de equipe em nenhum app.
      */
-    onAuthenticated: (tokens: LoginTokens) => void | Promise<void>;
+    onAuthenticated: (tokens: LoginTokens, contexto: {
+        membro: boolean;
+    }) => void | Promise<void>;
+    /**
+     * Quando o iam diz que a pessoa não tem vínculo de equipe (403), tenta o login de membro com
+     * a mesma senha em vez de mostrar erro. Ligue em apps que também atendem membros comuns.
+     */
+    permitirMembro?: boolean;
     /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
     mensagens?: Partial<Record<ChaveMensagem, string>>;
     /** Link "Esqueci a senha" (opcional; sem ele o link não aparece). */
@@ -120,7 +144,7 @@ interface LoginInPeaceProps {
  * (SSO). Mesma aparência, mesmas mensagens e mesmo tratamento de erro em todos os apps —
  * o que muda de um app pra outro entra por props e por `onAuthenticated`.
  */
-declare function LoginInPeace({ nome, descricao, icone, logoUrl, apiUrl, onAuthenticated, mensagens, esqueciSenhaUrl, rodape, }: LoginInPeaceProps): react.JSX.Element;
+declare function LoginInPeace({ nome, descricao, icone, logoUrl, apiUrl, onAuthenticated, permitirMembro, mensagens, esqueciSenhaUrl, rodape, }: LoginInPeaceProps): react.JSX.Element;
 
 /**
  * Gerenciador de modo claro/escuro (prefers-color-scheme + persistência),
@@ -140,4 +164,4 @@ declare function getEffectiveTheme(): 'light' | 'dark';
 declare function setThemeMode(next: ThemeMode): void;
 declare function subscribeTheme(cb: () => void): () => boolean;
 
-export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, LoginError, LoginFrame, type LoginFrameProps, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };
+export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarComMembroOpcoes, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, LoginError, LoginFrame, type LoginFrameProps, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarComFallbackDeMembro, autenticarMembroNoIam, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };

@@ -7,8 +7,15 @@ export type { BadgeProps } from './components/Badge';
 export { ThemeToggleIcon, ThemeToggleSegmented } from './components/ThemeToggle';
 export { LoginInPeace, LoginFrame } from './components/LoginInPeace';
 export type { LoginInPeaceProps, LoginFrameProps } from './components/LoginInPeace';
-export { autenticarNoIam, mensagemDeErro, LoginError, API_IAM_PADRAO } from './login';
-export type { LoginTokens, ChaveMensagem, AutenticarOpcoes } from './login';
+export {
+  autenticarNoIam,
+  autenticarMembroNoIam,
+  autenticarComFallbackDeMembro,
+  mensagemDeErro,
+  LoginError,
+  API_IAM_PADRAO,
+} from './login';
+export type { LoginTokens, ChaveMensagem, AutenticarOpcoes, AutenticarComMembroOpcoes } from './login';
 
 export {
   getThemeMode,

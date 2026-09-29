@@ -64,3 +64,22 @@ import { AppShell, Button, Badge } from '@lagoinha/ui-kit';
 4. Em cada front: `npm install github:lagoinha-consolidacao/ui-kit#v0.3.0`, testar, redeploy.
 
 Não é automático em todos os apps ao mesmo tempo — cada front escolhe quando subir de versão, então dá pra migrar um de cada vez sem quebrar os outros.
+
+## Publicar uma versão e atualizar os apps
+
+Tudo parte deste repo, sem token novo: os scripts usam as chaves SSH de deploy que a VPS já tem para cada repo.
+
+```bash
+# 1. commite a mudança no ui-kit, depois publique (sobe a versão, gera o dist, tag e push)
+npm run release -- minor "descrição curta"      # patch | minor | major
+
+# 2. atualiza os 5 apps (certifica-web, portal-web, iam-web, lakespace-web, pastoral-web)
+npm run propagar -- v0.8.0                       # atualiza + builda + commita, sem enviar
+npm run propagar -- v0.8.0 --push                # idem, e dá push (dispara o deploy de cada app)
+```
+
+Cada app só é enviado se o **build passar**; um app com alterações não commitadas, com commits novos no remoto ou com build quebrado é pulado (nada é commitado nele) e o resumo final diz o motivo. Rodar de novo com a mesma tag é seguro: quem já está nela é ignorado. `champions-web` fica fora de propósito (não faz parte do ecossistema de marca compartilhada).
+
+Variáveis opcionais: `LAGOINHA_PROJETOS` (pasta dos repos, padrão `/root/projects`) e `COMMIT_TRAILER` (linha extra no fim das mensagens de commit).
+
+**Regra dos service workers:** apps que usam PWA devem fazer só *precache* de arquivos estáticos. Nunca cachear respostas de rede nem de outro domínio (já causou um bug real: o `/auth/session` do SSO ficou em cache e devolvia um token expirado).

@@ -76,6 +76,19 @@ interface AutenticarOpcoes {
  */
 declare function autenticarNoIam(email: string, senha: string, { apiUrl, mensagens, fetchImpl, timeoutMs }?: AutenticarOpcoes): Promise<LoginTokens>;
 
+interface LoginFrameProps {
+    nome: string;
+    descricao?: string;
+    icone?: ReactNode;
+    logoUrl?: string;
+    children: ReactNode;
+}
+/**
+ * Quadro da tela de login (fundo, cartão, logo, nome e descrição). O `LoginInPeace` já usa;
+ * exporte-o pra outras telas do mesmo fluxo (ex.: cadastro, login de totem) ficarem
+ * visualmente idênticas às demais.
+ */
+declare function LoginFrame({ nome, descricao, icone, logoUrl, children }: LoginFrameProps): react.JSX.Element;
 interface LoginInPeaceProps {
     /** Nome do app (ex.: "LakeSpace"). */
     nome: string;
@@ -90,8 +103,13 @@ interface LoginInPeaceProps {
     /**
      * Chamado depois que o InPeace confirma a senha. Faça aqui o que é do app (buscar o
      * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
+     * O 2º argumento traz e-mail e senha só pra apps que precisam revalidá-los em outra
+     * rota (ex.: o login de aluno do certifica); a maioria pode ignorar.
      */
-    onAuthenticated: (tokens: LoginTokens) => void | Promise<void>;
+    onAuthenticated: (tokens: LoginTokens, credenciais: {
+        email: string;
+        senha: string;
+    }) => void | Promise<void>;
     /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
     mensagens?: Partial<Record<ChaveMensagem, string>>;
     /** Link "Esqueci a senha" (opcional; sem ele o link não aparece). */
@@ -124,4 +142,4 @@ declare function getEffectiveTheme(): 'light' | 'dark';
 declare function setThemeMode(next: ThemeMode): void;
 declare function subscribeTheme(cb: () => void): () => boolean;
 
-export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, LoginError, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };
+export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, LoginError, LoginFrame, type LoginFrameProps, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };

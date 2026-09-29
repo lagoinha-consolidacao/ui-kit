@@ -210,6 +210,19 @@ async function autenticarNoIam(email, senha, { apiUrl = API_IAM_PADRAO, mensagen
 
 // src/components/LoginInPeace.tsx
 import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
+function LoginFrame({ nome, descricao, icone, logoUrl, children }) {
+  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black p-4", children: /* @__PURE__ */ jsxs3("div", { className: "w-full max-w-sm rounded-xl border border-border bg-surface p-4 shadow-sm", children: [
+    /* @__PURE__ */ jsxs3("div", { className: "mb-6 text-center", children: [
+      logoUrl && /* @__PURE__ */ jsx5("img", { src: logoUrl, alt: "Lagoinha", className: "mx-auto mb-3 h-14 w-14 dark:invert" }),
+      /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold text-accent", children: [
+        icone,
+        nome
+      ] }),
+      descricao && /* @__PURE__ */ jsx5("p", { className: "mt-1 text-sm text-muted-foreground", children: descricao })
+    ] }),
+    children
+  ] }) });
+}
 function LoginInPeace({
   nome,
   descricao,
@@ -234,7 +247,7 @@ function LoginInPeace({
     setErro("");
     try {
       const tokens = await autenticarNoIam(email, senha, { apiUrl, mensagens });
-      await onAuthenticated(tokens);
+      await onAuthenticated(tokens, { email: email.trim(), senha });
     } catch (err) {
       setErro(err instanceof Error && err.message ? err.message : mensagemDeErro("outro", mensagens));
     } finally {
@@ -243,15 +256,7 @@ function LoginInPeace({
   }
   const campo = "w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
   const rotulo = "mb-1 block text-sm font-medium text-foreground-secondary";
-  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black p-4", children: /* @__PURE__ */ jsxs3("div", { className: "w-full max-w-sm rounded-xl border border-border bg-surface p-4 shadow-sm", children: [
-    /* @__PURE__ */ jsxs3("div", { className: "mb-6 text-center", children: [
-      logoUrl && /* @__PURE__ */ jsx5("img", { src: logoUrl, alt: "Lagoinha", className: "mx-auto mb-3 h-14 w-14 dark:invert" }),
-      /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold text-accent", children: [
-        icone,
-        nome
-      ] }),
-      descricao && /* @__PURE__ */ jsx5("p", { className: "mt-1 text-sm text-muted-foreground", children: descricao })
-    ] }),
+  return /* @__PURE__ */ jsxs3(LoginFrame, { nome, descricao, icone, logoUrl, children: [
     /* @__PURE__ */ jsx5("p", { className: "mb-4 text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
     /* @__PURE__ */ jsxs3("form", { onSubmit: enviar, className: "space-y-4", "aria-busy": carregando, children: [
       /* @__PURE__ */ jsxs3("div", { children: [
@@ -304,7 +309,7 @@ function LoginInPeace({
       esqueciSenhaUrl && /* @__PURE__ */ jsx5("p", { className: "text-center text-xs", children: /* @__PURE__ */ jsx5("a", { href: esqueciSenhaUrl, className: "text-muted-foreground underline hover:text-foreground", children: "Esqueci a senha" }) })
     ] }),
     rodape && /* @__PURE__ */ jsx5("div", { className: "mt-4", children: rodape })
-  ] }) });
+  ] });
 }
 export {
   API_IAM_PADRAO,
@@ -312,6 +317,7 @@ export {
   Badge,
   Button,
   LoginError,
+  LoginFrame,
   LoginInPeace,
   ThemeToggleIcon,
   ThemeToggleSegmented,

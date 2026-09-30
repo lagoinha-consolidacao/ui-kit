@@ -12,6 +12,17 @@
  * mudaram (azul -> dourado), não o vocabulário.
  */
 
+/* O modo escuro do ecossistema é a classe .dark em <html> (ver theme.ts), não a
+ * preferência do sistema. Sem esta linha o `dark:` do Tailwind seguia o sistema
+ * operacional: com o Windows no escuro e o app no claro, `dark:invert` deixava o
+ * logo branco em cima do cartão branco. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* O Tailwind não varre node_modules. Sem isto, classes usadas só pelos componentes do
+ * kit (ex.: max-w-sm, inset-y-0) nunca eram geradas nos apps e o LoginInPeace saía
+ * esticado e desalinhado. O caminho é relativo a este arquivo. */
+@source "./dist";
+
 :root {
   color-scheme: light;
 

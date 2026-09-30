@@ -23,15 +23,19 @@ export interface LoginFrameProps {
  */
 export function LoginFrame({ nome, descricao, icone, logoUrl, children }: LoginFrameProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand-black p-4">
-      <div className="w-full max-w-sm rounded-xl border border-border bg-surface p-4 shadow-sm">
-        <div className="mb-6 text-center">
-          {logoUrl && <img src={logoUrl} alt="Lagoinha" className="mx-auto mb-3 h-14 w-14 dark:invert" />}
-          <h1 className="flex items-center justify-center gap-2 text-2xl font-bold text-accent">
+    <div className="flex min-h-screen items-center justify-center bg-brand-black px-4 py-10">
+      {/* maxWidth inline de propósito: o cartão nunca estica, mesmo que uma classe utilitária falte */}
+      <div
+        className="w-full rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-black/40 sm:p-8"
+        style={{ maxWidth: '24rem' }}
+      >
+        <div className="mb-7 text-center">
+          {logoUrl && <img src={logoUrl} alt="Lagoinha" className="mx-auto mb-4 h-16 w-16 dark:invert" />}
+          <h1 className="flex items-center justify-center gap-2 text-2xl font-bold tracking-tight text-accent">
             {icone}
             {nome}
           </h1>
-          {descricao && <p className="mt-1 text-sm text-muted-foreground">{descricao}</p>}
+          {descricao && <p className="mt-1.5 text-sm text-muted-foreground">{descricao}</p>}
         </div>
         {children}
       </div>
@@ -112,12 +116,12 @@ export function LoginInPeace({
   }
 
   const campo =
-    'w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent';
-  const rotulo = 'mb-1 block text-sm font-medium text-foreground-secondary';
+    'w-full rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40';
+  const rotulo = 'mb-1.5 block text-sm font-medium text-foreground-secondary';
 
   return (
     <LoginFrame nome={nome} descricao={descricao} icone={icone} logoUrl={logoUrl}>
-      <p className="mb-4 text-xs text-subtle-foreground">Use o mesmo e-mail e senha do InPeace.</p>
+      <p className="mb-5 text-center text-xs text-subtle-foreground">Use o mesmo e-mail e senha do InPeace.</p>
 
       <form onSubmit={enviar} className="space-y-4" aria-busy={carregando}>
         <div>
@@ -141,7 +145,8 @@ export function LoginInPeace({
           <label htmlFor={`${id}-senha`} className={rotulo}>
             Senha do InPeace
           </label>
-          <div className="relative">
+          {/* posição inline de propósito: o olhinho nunca sai do campo, mesmo que uma classe utilitária falte */}
+          <div style={{ position: 'relative' }}>
             <input
               id={`${id}-senha`}
               type={mostrarSenha ? 'text' : 'password'}
@@ -149,14 +154,16 @@ export function LoginInPeace({
               required
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className={`${campo} pr-10`}
+              className={campo}
+              style={{ paddingRight: '2.75rem' }}
             />
             <button
               type="button"
               onClick={() => setMostrarSenha((v) => !v)}
               aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
               aria-pressed={mostrarSenha}
-              className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+              className="flex items-center rounded-r-xl px-3 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+              style={{ position: 'absolute', top: 0, bottom: 0, right: 0 }}
             >
               {mostrarSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -169,20 +176,20 @@ export function LoginInPeace({
           </p>
         )}
 
-        <Button type="submit" className="w-full disabled:cursor-not-allowed disabled:opacity-60" disabled={carregando}>
+        <Button type="submit" className="w-full py-3 disabled:cursor-not-allowed disabled:opacity-60" disabled={carregando}>
           {carregando ? 'Entrando…' : 'Entrar'}
         </Button>
 
         {esqueciSenhaUrl && (
           <p className="text-center text-xs">
-            <a href={esqueciSenhaUrl} className="text-muted-foreground underline hover:text-foreground">
+            <a href={esqueciSenhaUrl} className="text-muted-foreground underline underline-offset-2 hover:text-foreground">
               Esqueci a senha
             </a>
           </p>
         )}
       </form>
 
-      {rodape && <div className="mt-4">{rodape}</div>}
+      {rodape && <div className="mt-5 border-t border-border pt-4">{rodape}</div>}
     </LoginFrame>
   );
 }

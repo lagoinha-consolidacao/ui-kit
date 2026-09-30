@@ -227,17 +227,24 @@ async function autenticarComFallbackDeMembro(email, senha, { permitirMembro = fa
 // src/components/LoginInPeace.tsx
 import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
 function LoginFrame({ nome, descricao, icone, logoUrl, children }) {
-  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black p-4", children: /* @__PURE__ */ jsxs3("div", { className: "w-full max-w-sm rounded-xl border border-border bg-surface p-4 shadow-sm", children: [
-    /* @__PURE__ */ jsxs3("div", { className: "mb-6 text-center", children: [
-      logoUrl && /* @__PURE__ */ jsx5("img", { src: logoUrl, alt: "Lagoinha", className: "mx-auto mb-3 h-14 w-14 dark:invert" }),
-      /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold text-accent", children: [
-        icone,
-        nome
-      ] }),
-      descricao && /* @__PURE__ */ jsx5("p", { className: "mt-1 text-sm text-muted-foreground", children: descricao })
-    ] }),
-    children
-  ] }) });
+  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black px-4 py-10", children: /* @__PURE__ */ jsxs3(
+    "div",
+    {
+      className: "w-full rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-black/40 sm:p-8",
+      style: { maxWidth: "24rem" },
+      children: [
+        /* @__PURE__ */ jsxs3("div", { className: "mb-7 text-center", children: [
+          logoUrl && /* @__PURE__ */ jsx5("img", { src: logoUrl, alt: "Lagoinha", className: "mx-auto mb-4 h-16 w-16 dark:invert" }),
+          /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold tracking-tight text-accent", children: [
+            icone,
+            nome
+          ] }),
+          descricao && /* @__PURE__ */ jsx5("p", { className: "mt-1.5 text-sm text-muted-foreground", children: descricao })
+        ] }),
+        children
+      ]
+    }
+  ) });
 }
 function LoginInPeace({
   nome,
@@ -271,10 +278,10 @@ function LoginInPeace({
       setCarregando(false);
     }
   }
-  const campo = "w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
-  const rotulo = "mb-1 block text-sm font-medium text-foreground-secondary";
+  const campo = "w-full rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40";
+  const rotulo = "mb-1.5 block text-sm font-medium text-foreground-secondary";
   return /* @__PURE__ */ jsxs3(LoginFrame, { nome, descricao, icone, logoUrl, children: [
-    /* @__PURE__ */ jsx5("p", { className: "mb-4 text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
+    /* @__PURE__ */ jsx5("p", { className: "mb-5 text-center text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
     /* @__PURE__ */ jsxs3("form", { onSubmit: enviar, className: "space-y-4", "aria-busy": carregando, children: [
       /* @__PURE__ */ jsxs3("div", { children: [
         /* @__PURE__ */ jsx5("label", { htmlFor: `${id}-email`, className: rotulo, children: "E-mail do InPeace" }),
@@ -295,7 +302,7 @@ function LoginInPeace({
       ] }),
       /* @__PURE__ */ jsxs3("div", { children: [
         /* @__PURE__ */ jsx5("label", { htmlFor: `${id}-senha`, className: rotulo, children: "Senha do InPeace" }),
-        /* @__PURE__ */ jsxs3("div", { className: "relative", children: [
+        /* @__PURE__ */ jsxs3("div", { style: { position: "relative" }, children: [
           /* @__PURE__ */ jsx5(
             "input",
             {
@@ -305,7 +312,8 @@ function LoginInPeace({
               required: true,
               value: senha,
               onChange: (e) => setSenha(e.target.value),
-              className: `${campo} pr-10`
+              className: campo,
+              style: { paddingRight: "2.75rem" }
             }
           ),
           /* @__PURE__ */ jsx5(
@@ -315,17 +323,18 @@ function LoginInPeace({
               onClick: () => setMostrarSenha((v) => !v),
               "aria-label": mostrarSenha ? "Ocultar senha" : "Mostrar senha",
               "aria-pressed": mostrarSenha,
-              className: "absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground",
+              className: "flex items-center rounded-r-xl px-3 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40",
+              style: { position: "absolute", top: 0, bottom: 0, right: 0 },
               children: mostrarSenha ? /* @__PURE__ */ jsx5(EyeOff, { className: "h-4 w-4" }) : /* @__PURE__ */ jsx5(Eye, { className: "h-4 w-4" })
             }
           )
         ] })
       ] }),
       erro && /* @__PURE__ */ jsx5("p", { role: "alert", className: "text-sm text-danger-foreground", children: erro }),
-      /* @__PURE__ */ jsx5(Button, { type: "submit", className: "w-full disabled:cursor-not-allowed disabled:opacity-60", disabled: carregando, children: carregando ? "Entrando\u2026" : "Entrar" }),
-      esqueciSenhaUrl && /* @__PURE__ */ jsx5("p", { className: "text-center text-xs", children: /* @__PURE__ */ jsx5("a", { href: esqueciSenhaUrl, className: "text-muted-foreground underline hover:text-foreground", children: "Esqueci a senha" }) })
+      /* @__PURE__ */ jsx5(Button, { type: "submit", className: "w-full py-3 disabled:cursor-not-allowed disabled:opacity-60", disabled: carregando, children: carregando ? "Entrando\u2026" : "Entrar" }),
+      esqueciSenhaUrl && /* @__PURE__ */ jsx5("p", { className: "text-center text-xs", children: /* @__PURE__ */ jsx5("a", { href: esqueciSenhaUrl, className: "text-muted-foreground underline underline-offset-2 hover:text-foreground", children: "Esqueci a senha" }) })
     ] }),
-    rodape && /* @__PURE__ */ jsx5("div", { className: "mt-4", children: rodape })
+    rodape && /* @__PURE__ */ jsx5("div", { className: "mt-5 border-t border-border pt-4", children: rodape })
   ] });
 }
 export {

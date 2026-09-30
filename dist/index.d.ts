@@ -140,7 +140,7 @@ interface LoginFormInPeaceProps {
     onEsqueciSenha?: () => void;
     /** Avisa o app a cada mudança do e-mail digitado (ex.: pré-preencher um cadastro). */
     onEmailChange?: (email: string) => void;
-    /** Mostra a linha "Use o mesmo e-mail e senha do InPeace." Padrão: true. */
+    /** Mostra a linha "Entre com o mesmo e-mail e senha que você usa no app da Lagoinha Global." Padrão: true. */
     dica?: boolean;
     /** Foco automático no e-mail. Padrão: true. */
     autoFocar?: boolean;

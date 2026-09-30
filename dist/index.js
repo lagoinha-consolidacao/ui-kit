@@ -227,10 +227,10 @@ async function autenticarComFallbackDeMembro(email, senha, { permitirMembro = fa
 // src/components/LoginInPeace.tsx
 import { Fragment, jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
 function LoginFrame({ nome, descricao, icone, logoUrl, children }) {
-  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black px-4 py-10", children: /* @__PURE__ */ jsxs3(
+  return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-canvas px-4 py-10", children: /* @__PURE__ */ jsxs3(
     "div",
     {
-      className: "w-full rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-black/40 sm:p-8",
+      className: "w-full rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-black/10 sm:p-8",
       style: { maxWidth: "24rem" },
       children: [
         /* @__PURE__ */ jsxs3("div", { className: "mb-7 text-center", children: [
@@ -286,7 +286,7 @@ function LoginFormInPeace({
   const rotulo = "mb-1.5 block text-sm font-medium text-foreground-secondary";
   const linkEsqueci = "text-muted-foreground underline underline-offset-2 hover:text-foreground";
   return /* @__PURE__ */ jsxs3(Fragment, { children: [
-    dica && /* @__PURE__ */ jsx5("p", { className: "mb-5 text-center text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
+    dica && /* @__PURE__ */ jsx5("p", { className: "mb-5 text-center text-xs text-subtle-foreground", children: "Entre com o mesmo e-mail e senha que voc\xEA usa no app da Lagoinha Global." }),
     /* @__PURE__ */ jsxs3("form", { onSubmit: enviar, className: "space-y-4", "aria-busy": carregando, children: [
       /* @__PURE__ */ jsxs3("div", { children: [
         /* @__PURE__ */ jsx5("label", { htmlFor: `${id}-email`, className: rotulo, children: "E-mail do InPeace" }),

@@ -5,8 +5,13 @@ export type { ButtonProps } from './components/Button';
 export { Badge } from './components/Badge';
 export type { BadgeProps } from './components/Badge';
 export { ThemeToggleIcon, ThemeToggleSegmented } from './components/ThemeToggle';
-export { LoginInPeace, LoginFrame } from './components/LoginInPeace';
-export type { LoginInPeaceProps, LoginFrameProps } from './components/LoginInPeace';
+export { LoginInPeace, LoginFormInPeace, LoginFrame } from './components/LoginInPeace';
+export type {
+  LoginInPeaceProps,
+  LoginFormInPeaceProps,
+  LoginFrameProps,
+  LoginContexto,
+} from './components/LoginInPeace';
 export {
   autenticarNoIam,
   autenticarMembroNoIam,

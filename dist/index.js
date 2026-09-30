@@ -161,7 +161,7 @@ function ThemeToggleSegmented() {
 
 // src/components/LoginInPeace.tsx
 import { Eye, EyeOff } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 // src/login.ts
 var API_IAM_PADRAO = "https://acessos-api.lagoinha.app";
@@ -225,7 +225,7 @@ async function autenticarComFallbackDeMembro(email, senha, { permitirMembro = fa
 }
 
 // src/components/LoginInPeace.tsx
-import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
+import { Fragment, jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
 function LoginFrame({ nome, descricao, icone, logoUrl, children }) {
   return /* @__PURE__ */ jsx5("div", { className: "flex min-h-screen items-center justify-center bg-brand-black px-4 py-10", children: /* @__PURE__ */ jsxs3(
     "div",
@@ -246,17 +246,16 @@ function LoginFrame({ nome, descricao, icone, logoUrl, children }) {
     }
   ) });
 }
-function LoginInPeace({
-  nome,
-  descricao,
-  icone,
-  logoUrl,
+function LoginFormInPeace({
   apiUrl,
   onAuthenticated,
   permitirMembro,
   mensagens,
   esqueciSenhaUrl,
-  rodape
+  onEsqueciSenha,
+  onEmailChange,
+  dica = true,
+  autoFocar = true
 }) {
   const id = useId();
   const [email, setEmail] = useState("");
@@ -264,14 +263,19 @@ function LoginInPeace({
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const credenciais = useRef({ email: "", senha: "" });
   async function enviar(e) {
     e.preventDefault();
     if (carregando) return;
     setCarregando(true);
     setErro("");
+    credenciais.current = { email, senha };
     try {
       const { tokens, membro } = await autenticarComFallbackDeMembro(email, senha, { apiUrl, mensagens, permitirMembro });
-      await onAuthenticated(tokens, { membro });
+      await onAuthenticated(tokens, {
+        membro,
+        obterTokenDeMembro: () => autenticarMembroNoIam(credenciais.current.email, credenciais.current.senha, { apiUrl, mensagens })
+      });
     } catch (err) {
       setErro(err instanceof Error && err.message ? err.message : mensagemDeErro("outro", mensagens));
     } finally {
@@ -280,8 +284,9 @@ function LoginInPeace({
   }
   const campo = "w-full rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40";
   const rotulo = "mb-1.5 block text-sm font-medium text-foreground-secondary";
-  return /* @__PURE__ */ jsxs3(LoginFrame, { nome, descricao, icone, logoUrl, children: [
-    /* @__PURE__ */ jsx5("p", { className: "mb-5 text-center text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
+  const linkEsqueci = "text-muted-foreground underline underline-offset-2 hover:text-foreground";
+  return /* @__PURE__ */ jsxs3(Fragment, { children: [
+    dica && /* @__PURE__ */ jsx5("p", { className: "mb-5 text-center text-xs text-subtle-foreground", children: "Use o mesmo e-mail e senha do InPeace." }),
     /* @__PURE__ */ jsxs3("form", { onSubmit: enviar, className: "space-y-4", "aria-busy": carregando, children: [
       /* @__PURE__ */ jsxs3("div", { children: [
         /* @__PURE__ */ jsx5("label", { htmlFor: `${id}-email`, className: rotulo, children: "E-mail do InPeace" }),
@@ -292,10 +297,13 @@ function LoginInPeace({
             type: "email",
             inputMode: "email",
             autoComplete: "username",
-            autoFocus: true,
+            autoFocus: autoFocar,
             required: true,
             value: email,
-            onChange: (e) => setEmail(e.target.value),
+            onChange: (e) => {
+              setEmail(e.target.value);
+              onEmailChange?.(e.target.value);
+            },
             className: campo
           }
         )
@@ -332,8 +340,13 @@ function LoginInPeace({
       ] }),
       erro && /* @__PURE__ */ jsx5("p", { role: "alert", className: "text-sm text-danger-foreground", children: erro }),
       /* @__PURE__ */ jsx5(Button, { type: "submit", className: "w-full py-3 disabled:cursor-not-allowed disabled:opacity-60", disabled: carregando, children: carregando ? "Entrando\u2026" : "Entrar" }),
-      esqueciSenhaUrl && /* @__PURE__ */ jsx5("p", { className: "text-center text-xs", children: /* @__PURE__ */ jsx5("a", { href: esqueciSenhaUrl, className: "text-muted-foreground underline underline-offset-2 hover:text-foreground", children: "Esqueci a senha" }) })
-    ] }),
+      (onEsqueciSenha || esqueciSenhaUrl) && /* @__PURE__ */ jsx5("p", { className: "text-center text-xs", children: onEsqueciSenha ? /* @__PURE__ */ jsx5("button", { type: "button", onClick: onEsqueciSenha, className: linkEsqueci, children: "Esqueci a senha" }) : /* @__PURE__ */ jsx5("a", { href: esqueciSenhaUrl, className: linkEsqueci, children: "Esqueci a senha" }) })
+    ] })
+  ] });
+}
+function LoginInPeace({ nome, descricao, icone, logoUrl, rodape, ...formulario }) {
+  return /* @__PURE__ */ jsxs3(LoginFrame, { nome, descricao, icone, logoUrl, children: [
+    /* @__PURE__ */ jsx5(LoginFormInPeace, { ...formulario }),
     rodape && /* @__PURE__ */ jsx5("div", { className: "mt-5 border-t border-border pt-4", children: rodape })
   ] });
 }
@@ -343,6 +356,7 @@ export {
   Badge,
   Button,
   LoginError,
+  LoginFormInPeace,
   LoginFrame,
   LoginInPeace,
   ThemeToggleIcon,

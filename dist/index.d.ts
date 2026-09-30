@@ -105,7 +105,53 @@ interface LoginFrameProps {
  * visualmente idênticas às demais.
  */
 declare function LoginFrame({ nome, descricao, icone, logoUrl, children }: LoginFrameProps): react.JSX.Element;
-interface LoginInPeaceProps {
+interface LoginContexto {
+    /** true quando a pessoa entrou pelo login de membro (só com `permitirMembro`): sem vínculo de equipe em nenhum app. */
+    membro: boolean;
+    /**
+     * Refaz o login pela rota de MEMBRO com as credenciais que ficaram no formulário e devolve o
+     * token. Serve a apps que, depois do login de equipe, descobrem que a pessoa não tem vínculo
+     * ali (ex.: tem acesso só ao lakespace e quer agendar no pastoral) e precisam de um token de
+     * membro. A senha nunca sai do formulário: o app só recebe o token.
+     */
+    obterTokenDeMembro: () => Promise<LoginTokens>;
+}
+interface LoginFormInPeaceProps {
+    /** URL do iam-api. Padrão: https://acessos-api.lagoinha.app */
+    apiUrl?: string;
+    /**
+     * Chamado depois que o InPeace confirma a senha. Faça aqui o que é do app (buscar o
+     * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
+     * A senha nunca sai do formulário: troque o token do iam-api por uma sessão do app
+     * (revalidar a senha em outra rota espalharia a credencial e, se fosse na URL, ela
+     * iria parar nos logs de acesso).
+     */
+    onAuthenticated: (tokens: LoginTokens, contexto: LoginContexto) => void | Promise<void>;
+    /**
+     * Quando o iam diz que a pessoa não tem vínculo de equipe (403), tenta o login de membro com
+     * a mesma senha em vez de mostrar erro. Ligue em apps que também atendem membros comuns.
+     */
+    permitirMembro?: boolean;
+    /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
+    mensagens?: Partial<Record<ChaveMensagem, string>>;
+    /** Link "Esqueci a senha" (opcional; sem ele e sem `onEsqueciSenha` o link não aparece). */
+    esqueciSenhaUrl?: string;
+    /** Alternativa ao link: função chamada ao tocar em "Esqueci a senha" (ex.: abrir um modal). */
+    onEsqueciSenha?: () => void;
+    /** Avisa o app a cada mudança do e-mail digitado (ex.: pré-preencher um cadastro). */
+    onEmailChange?: (email: string) => void;
+    /** Mostra a linha "Use o mesmo e-mail e senha do InPeace." Padrão: true. */
+    dica?: boolean;
+    /** Foco automático no e-mail. Padrão: true. */
+    autoFocar?: boolean;
+}
+/**
+ * Só o formulário (e-mail, senha, erro, botão), sem fundo nem cartão — pra encaixar dentro da
+ * página de um app que já tem o próprio quadro (ex.: primeiro passo de um assistente). Quem
+ * quer a tela inteira usa o `LoginInPeace`.
+ */
+declare function LoginFormInPeace({ apiUrl, onAuthenticated, permitirMembro, mensagens, esqueciSenhaUrl, onEsqueciSenha, onEmailChange, dica, autoFocar, }: LoginFormInPeaceProps): react.JSX.Element;
+interface LoginInPeaceProps extends LoginFormInPeaceProps {
     /** Nome do app (ex.: "LakeSpace"). */
     nome: string;
     /** Uma linha sobre o app, abaixo do nome (ex.: "Reserva de espaços e times"). */
@@ -114,28 +160,6 @@ interface LoginInPeaceProps {
     icone?: ReactNode;
     /** URL do logo (ex.: `import logoUrl from '@lagoinha/ui-kit/logo.svg'`). */
     logoUrl?: string;
-    /** URL do iam-api. Padrão: https://acessos-api.lagoinha.app */
-    apiUrl?: string;
-    /**
-     * Chamado depois que o InPeace confirma a senha. Faça aqui o que é do app (buscar o
-     * `/me`, guardar a sessão, navegar). Se lançar um `Error`, a mensagem aparece na tela.
-     * A senha nunca sai do formulário: troque o token do iam-api por uma sessão do app
-     * (revalidar a senha em outra rota espalharia a credencial e, se fosse na URL, ela
-     * iria parar nos logs de acesso). `contexto.membro` é true quando a pessoa entrou pelo
-     * login de membro (só com `permitirMembro`): não tem vínculo de equipe em nenhum app.
-     */
-    onAuthenticated: (tokens: LoginTokens, contexto: {
-        membro: boolean;
-    }) => void | Promise<void>;
-    /**
-     * Quando o iam diz que a pessoa não tem vínculo de equipe (403), tenta o login de membro com
-     * a mesma senha em vez de mostrar erro. Ligue em apps que também atendem membros comuns.
-     */
-    permitirMembro?: boolean;
-    /** Mensagens próprias por status HTTP (401, 403, 503…), `rede` ou `outro`; vencem as padrão. */
-    mensagens?: Partial<Record<ChaveMensagem, string>>;
-    /** Link "Esqueci a senha" (opcional; sem ele o link não aparece). */
-    esqueciSenhaUrl?: string;
     /** Conteúdo extra abaixo do formulário (ex.: fluxo de aluno, agendamento de membro). */
     rodape?: ReactNode;
 }
@@ -144,7 +168,7 @@ interface LoginInPeaceProps {
  * (SSO). Mesma aparência, mesmas mensagens e mesmo tratamento de erro em todos os apps —
  * o que muda de um app pra outro entra por props e por `onAuthenticated`.
  */
-declare function LoginInPeace({ nome, descricao, icone, logoUrl, apiUrl, onAuthenticated, permitirMembro, mensagens, esqueciSenhaUrl, rodape, }: LoginInPeaceProps): react.JSX.Element;
+declare function LoginInPeace({ nome, descricao, icone, logoUrl, rodape, ...formulario }: LoginInPeaceProps): react.JSX.Element;
 
 /**
  * Gerenciador de modo claro/escuro (prefers-color-scheme + persistência),
@@ -164,4 +188,4 @@ declare function getEffectiveTheme(): 'light' | 'dark';
 declare function setThemeMode(next: ThemeMode): void;
 declare function subscribeTheme(cb: () => void): () => boolean;
 
-export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarComMembroOpcoes, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, LoginError, LoginFrame, type LoginFrameProps, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarComFallbackDeMembro, autenticarMembroNoIam, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };
+export { API_IAM_PADRAO, AppShell, type AppShellApp, type AppShellProps, type AutenticarComMembroOpcoes, type AutenticarOpcoes, Badge, type BadgeProps, Button, type ButtonProps, type ChaveMensagem, type LoginContexto, LoginError, LoginFormInPeace, type LoginFormInPeaceProps, LoginFrame, type LoginFrameProps, LoginInPeace, type LoginInPeaceProps, type LoginTokens, type ThemeMode, ThemeToggleIcon, ThemeToggleSegmented, autenticarComFallbackDeMembro, autenticarMembroNoIam, autenticarNoIam, getEffectiveTheme, getThemeMode, mensagemDeErro, setThemeMode, subscribeTheme };

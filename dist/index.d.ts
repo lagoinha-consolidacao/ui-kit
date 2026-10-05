@@ -22,7 +22,7 @@ declare function AppShell({ appName, apps, logo, actions }: AppShellProps): reac
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary';
 }
-/** Botão padrão do ecossistema — dourado como única ação primária, nunca mais de um por tela. */
+/** Botão padrão do ecossistema — amarelo como única ação primária, nunca mais de um por tela. */
 declare function Button({ variant, className, ...props }: ButtonProps): react.JSX.Element;
 
 interface BadgeProps {

@@ -28,7 +28,7 @@ function AppShell({ appName, apps, logo, actions }) {
 import { jsx as jsx2 } from "react/jsx-runtime";
 function Button({ variant = "primary", className = "", ...props }) {
   const base = "rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors";
-  const styles = variant === "primary" ? "bg-accent text-accent-foreground hover:bg-accent-hover" : "border border-border bg-transparent text-foreground hover:bg-surface-hover";
+  const styles = variant === "primary" ? "border border-accent-border bg-accent text-accent-foreground hover:bg-accent-hover" : "border border-border bg-transparent text-foreground hover:bg-surface-hover";
   return /* @__PURE__ */ jsx2("button", { className: `${base} ${styles} ${className}`, ...props });
 }
 
@@ -148,7 +148,7 @@ function ThemeToggleSegmented() {
       {
         onClick: () => setThemeMode2(m),
         title: LABELS[m],
-        className: `flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors ${mode === m ? "bg-surface text-accent shadow-sm" : "text-muted-foreground hover:text-foreground-secondary"}`,
+        className: `flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors ${mode === m ? "bg-surface text-accent-text shadow-sm" : "text-muted-foreground hover:text-foreground-secondary"}`,
         children: [
           /* @__PURE__ */ jsx4(Icon, { size: 13 }),
           LABELS[m]
@@ -235,7 +235,7 @@ function LoginFrame({ nome, descricao, icone, logoUrl, children }) {
       children: [
         /* @__PURE__ */ jsxs3("div", { className: "mb-7 text-center", children: [
           logoUrl && /* @__PURE__ */ jsx5("img", { src: logoUrl, alt: "Lagoinha", className: "mx-auto mb-4 h-16 w-16 dark:invert" }),
-          /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold tracking-tight text-accent", children: [
+          /* @__PURE__ */ jsxs3("h1", { className: "flex items-center justify-center gap-2 text-2xl font-bold tracking-tight text-accent-text", children: [
             icone,
             nome
           ] }),

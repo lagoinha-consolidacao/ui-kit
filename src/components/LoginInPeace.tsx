@@ -32,7 +32,7 @@ export function LoginFrame({ nome, descricao, icone, logoUrl, children }: LoginF
       >
         <div className="mb-7 text-center">
           {logoUrl && <img src={logoUrl} alt="Lagoinha" className="mx-auto mb-4 h-16 w-16 dark:invert" />}
-          <h1 className="flex items-center justify-center gap-2 text-2xl font-bold tracking-tight text-accent">
+          <h1 className="flex items-center justify-center gap-2 text-2xl font-bold tracking-tight text-accent-text">
             {icone}
             {nome}
           </h1>

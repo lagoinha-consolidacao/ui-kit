@@ -56,7 +56,7 @@ export function ThemeToggleSegmented() {
             onClick={() => setThemeMode(m)}
             title={LABELS[m]}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors ${
-              mode === m ? 'bg-surface text-accent shadow-sm' : 'text-muted-foreground hover:text-foreground-secondary'
+              mode === m ? 'bg-surface text-accent-text shadow-sm' : 'text-muted-foreground hover:text-foreground-secondary'
             }`}
           >
             <Icon size={13} />

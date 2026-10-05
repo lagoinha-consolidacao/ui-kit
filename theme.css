@@ -46,26 +46,37 @@
      telas reais (claro+escuro) e escolheu esta - ver artifact "Teste de
      tema — Espaços". Texto sobre o accent agora é claro (o tom ficou
      escuro/rico demais pra texto escuro continuar legível). */
-  --color-accent: #A66A1E;
-  --color-accent-hover: #8A5718;
-  --color-accent-foreground: #FFF8EC;
-  --color-accent-soft: #F5E2C4;
-  --color-accent-soft-foreground: #6E4413;
+  /* v3 (2026-10-05) - amarelo da igreja, a pedido do Bruno: #f6d012 no claro, #FFB700 no escuro.
+     O amarelo PREENCHE (botão, selo, destaque) e o preto MARCA (seleção, link, contorno, foco): amarelo
+     sobre branco quase não tem contraste (cerca de 1,4:1), então ele nunca é usado como texto nem como
+     contorno sobre fundo claro. Texto SOBRE o amarelo é escuro. */
+  --color-accent: #f6d012;
+  --color-accent-hover: #e5c100;
+  --color-accent-foreground: #1C1917;
+  --color-accent-soft: #FFF6BF;
+  --color-accent-soft-foreground: #5C4800;
+  /* acento usado como TEXTO, link, ícone, contorno e anel de foco */
+  --color-accent-text: #1C1917;
+  /* borda fina que define o limite de um botão amarelo sobre fundo claro */
+  --color-accent-border: #B89B00;
+  /* estado "selecionado" (aba, chip, opção marcada): preto com texto amarelo */
+  --color-selected: #1C1917;
+  --color-selected-foreground: #f6d012;
 
   /* Escala numérica invariante (não muda entre claro/escuro, como as
      escalas padrão do Tailwind) - pra apps que já usam um degradê
      próprio (ex.: bg-portal-600, bg-lake-500) apontar pra cá em vez de
      ter a própria paleta. --color-accent-500 == --color-accent. */
-  --color-gold-50: #FBF3E6;
-  --color-gold-100: #F5E2C4;
-  --color-gold-200: #E9C68F;
-  --color-gold-300: #DCAA61;
-  --color-gold-400: #C68A3D;
-  --color-gold-500: #A66A1E;
-  --color-gold-600: #8A5718;
-  --color-gold-700: #6E4413;
-  --color-gold-800: #4D2F0D;
-  --color-gold-900: #332008;
+  --color-gold-50: #FFFBEA;
+  --color-gold-100: #FFF6BF;
+  --color-gold-200: #FDEC85;
+  --color-gold-300: #FBE04B;
+  --color-gold-400: #F9D62E;
+  --color-gold-500: #f6d012;
+  --color-gold-600: #D4AF00;
+  --color-gold-700: #A88A00;
+  --color-gold-800: #7A5C00;
+  --color-gold-900: #4D3A00;
 
   --color-bronze: #8C5A3E;
   --color-bronze-soft: #F1E3D8;
@@ -105,11 +116,15 @@
   --color-muted-foreground: #A69C8D;
   --color-subtle-foreground: #7D7468;
 
-  --color-accent: #C9924A;
-  --color-accent-hover: #D9A868;
-  --color-accent-foreground: #241505;
-  --color-accent-soft: rgb(201 146 74 / 0.15);
-  --color-accent-soft-foreground: #D9A868;
+  --color-accent: #FFB700;
+  --color-accent-hover: #FFC933;
+  --color-accent-foreground: #1C1400;
+  --color-accent-soft: rgb(255 183 0 / 0.15);
+  --color-accent-soft-foreground: #FFC933;
+  --color-accent-text: #FFB700;
+  --color-accent-border: #FFB700;
+  --color-selected: #FFB700;
+  --color-selected-foreground: #1C1400;
 
   --color-bronze: #C4886A;
   --color-bronze-soft: #2E211A;
@@ -154,6 +169,10 @@
   --color-accent-foreground: var(--color-accent-foreground);
   --color-accent-soft: var(--color-accent-soft);
   --color-accent-soft-foreground: var(--color-accent-soft-foreground);
+  --color-accent-text: var(--color-accent-text);
+  --color-accent-border: var(--color-accent-border);
+  --color-selected: var(--color-selected);
+  --color-selected-foreground: var(--color-selected-foreground);
 
   --color-gold-50: var(--color-gold-50);
   --color-gold-100: var(--color-gold-100);
